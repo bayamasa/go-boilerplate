@@ -14,6 +14,7 @@ func main() {
         Field2 string `json:"field2,omitempty"`
 
         // "-" は、常にフィールドは省略される
+		// jsonで渡さないでquerystringとかで渡すときに使う
         Field3 string `json:"-"`
     }
 
