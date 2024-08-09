@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  myapp:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8080"
+    environment:
+      - OTEL_LOG_LEVEL=info
+    volumes:
+      - mydata:/opt/data
+      - type: tmpfs
+        target: /opt/tmp
+        tmpfs:
+          size: 10000000
+volumes:
+  mydata:
