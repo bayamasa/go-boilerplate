@@ -1,18 +1,44 @@
 version: '3.8'
 services:
-  myapp:
+  backend:
     build: 
       context: .
       dockerfile: Dockerfile
     ports:
       - "8000:8080"
-    environment:
-      - OTEL_LOG_LEVEL=info
     volumes:
-      - mydata:/opt/data
+      - backend:/opt/data
       - type: tmpfs
         target: /opt/tmp
         tmpfs:
           size: 10000000
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:9.0.1
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 --password="$$(cat /run/secrets/db-password)" --silent']
+      interval: 3s
+      retries: 5
+      start_period: 30s
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-password
+      MYSQL_DATABASE: go_boilerplate
+    ports:
+      - "3306:3306"
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+      - ./db/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      
 volumes:
-  mydata:
+  backend:
+  db-data:
+  
+secrets:
+  db-password:
+    file: db/mysql/db-password.txt
