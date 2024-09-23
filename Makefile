@@ -7,7 +7,6 @@ help:
 fmt: ## Run go fmt
 	go fmt ./...
 
-
 .PHONY: up
 up: ## Run docker-compose up
 	docker compose up -d
