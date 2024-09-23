@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bayamasa/go-boilerplate/app/infrastructure/client/db"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -21,20 +22,20 @@ type Server struct {
 	http.Server
 }
 
-func NewServer(port string) (*Server) {	
+func NewServer(port string, db *db.DB) *Server {
 
 	return &Server{
 		http.Server{
-			Addr:        fmt.Sprintf(":%s", port),
-			Handler:     NewMux(),
+			Addr:        ":" + port,
+			Handler:     NewMux(db),
 			ReadTimeout: readTimeout(),
 		}}
 }
 
-func readTimeout() (time.Duration) {
+func readTimeout() time.Duration {
 	var readTimeout time.Duration
-	envReadTimeout := os.Getenv("READ_TIMEOUT");
-	
+	envReadTimeout := os.Getenv("REQUEST_READ_TIMEOUT")
+
 	readTimeout, err := time.ParseDuration(envReadTimeout)
 	if err != nil {
 		readTimeout = readTimeoutDefaultSec * time.Second

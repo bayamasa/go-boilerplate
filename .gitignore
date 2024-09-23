@@ -25,3 +25,5 @@ go.work.sum
 # customize
 main
 bin
+.env
+go_boilerplate
