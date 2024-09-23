@@ -13,7 +13,7 @@ type UserController struct {
 	application.FetchUserUsecase
 }
 
-func NewUserController(usecase application.FetchUserUsecase) *UserController{
+func NewUserController(usecase application.FetchUserUsecase) *UserController {
 	return &UserController{
 		FetchUserUsecase: usecase,
 	}
@@ -27,7 +27,7 @@ func (uc *UserController) GetUsers(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	
+
 	input := application.FetchUserInput{
 		UserId: id,
 	}

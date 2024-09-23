@@ -8,12 +8,12 @@ import (
 
 type UserDBO struct {
 	Id          int
-	Email 	 string
-	LastName     string
-	FirstName    string
-	Gender	   string
-	DateOfBirth  time.Time
-	Location     string
+	Email       string
+	LastName    string
+	FirstName   string
+	Gender      string
+	DateOfBirth time.Time
+	Location    string
 }
 
 func (u *UserDBO) ToDomainModel() *user.User {
