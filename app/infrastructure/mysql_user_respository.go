@@ -3,6 +3,7 @@ package infrastructure
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	"github.com/bayamasa/go-boilerplate/app/domain/user"
 	"github.com/bayamasa/go-boilerplate/app/infrastructure/client/db"
@@ -23,10 +24,10 @@ func (r *MySQLUserRepository) FindBy(ctx context.Context, id int64) (*user.User,
 	SELECT 
 		id, 
 		email,
-		lastName,
-		firstName,
+		last_name,
+		first_name,
 		gender,
-		dateOfBirth,
+		date_of_birth,
 		location
 	FROM 
 		users 
@@ -34,12 +35,19 @@ func (r *MySQLUserRepository) FindBy(ctx context.Context, id int64) (*user.User,
 		id = ?`
 	
 	var dbo UserDBO
-	err := r.db.Read.QueryRowContext(ctx, query, id).Scan(&dbo)
-	if err != nil {
+	if err := r.db.Read.QueryRowContext(ctx, query, id).Scan(
+		&dbo.Id,
+		&dbo.Email,
+		&dbo.LastName,
+		&dbo.FirstName,
+		&dbo.Gender,
+		&dbo.DateOfBirth,
+		&dbo.Location,
+	); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to fetch user: %w", err)
 	}
 	return dbo.ToDomainModel(), nil
 }

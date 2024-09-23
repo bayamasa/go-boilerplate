@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/bayamasa/go-boilerplate/app/domain/user"
 )
@@ -35,13 +36,18 @@ func NewFetchUsersUsecase(
 }
 
 func (fu *FetchUserUsecase) FetchUser(ctx context.Context, input FetchUserInput) (*FetchUserOutput, error) {
+	fmt.Printf("input user id: %d\n", input.UserId)
 	fetchedUser, err := fu.userRepository.FindBy(ctx, input.UserId)
 	if err != nil {
 		return nil, err
 	}
 	
+	if fetchedUser == nil {
+		return nil, nil
+	} 
+	
 	return &FetchUserOutput{
-		Id:          fetchedUser.ID(),
+		Id:          fetchedUser.Id(),
 		Email:       fetchedUser.Email(),
 		LastName:    fetchedUser.LastName(),
 		FirstName:   fetchedUser.FirstName(),

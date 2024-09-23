@@ -2,43 +2,29 @@ package config
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/spf13/viper"
+	"github.com/caarlos0/env/v11"
 )
 
 type Config struct {
-	Env      string
+	Env      string `env:"ENV" envDefault:"local"`
 	Database struct {
-		Name string
+		Name string `env:"DB_NAME"`
 		Host struct {
-			Read  string
-			Write string
+			Read  string `env:"DB_READ_HOST"`
+			Write string `env:"DB_WRITE_HOST"`
 		}
-		Port     string
-		User     string
-		Password string
+		Port     string `env:"DB_PORT"`
+		User     string `env:"DB_USER"`
+		Password string `env:"DB_PASSWORD"`
 	}
 }
 
 func NewConfig() (*Config, error) {
 	var cfg Config
 
-	env := os.Getenv("ENV")
-	if env == "" {
-		env = "local"
-	}
-
-	viper.SetConfigName(env + ".yaml")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./config/environment")
-
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("failed to read config file: %w", err)
-	}
-
-	if err := viper.Unmarshal(&cfg); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal config: %w", err)
+	if err := env.Parse(&cfg); err != nil {
+		return nil, fmt.Errorf("failed to parse config: %w", err)
 	}
 
 	return &cfg, nil

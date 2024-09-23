@@ -13,7 +13,7 @@ type User struct {
 	location    string
 }
 
-func (u *User) ID() int {
+func (u *User) Id() int {
 	return u.id
 }
 

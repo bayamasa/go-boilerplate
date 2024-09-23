@@ -40,9 +40,11 @@ func NewDB(c *config.Config) (*DB, error) {
 
 func buildDSN(c *config.Config) string {
 	dsn := &mysql.Config{
+		DBName: c.Database.Name,
 		User: c.Database.User,
 		Passwd: c.Database.Password,
 		Addr: c.Database.Host.Read + ":" + c.Database.Port,
+		Net: "tcp",
 		ParseTime: true,
 		Loc: time.Local,
 	}
