@@ -2,7 +2,6 @@ package user
 
 import "time"
 
-
 type User struct {
 	id          int
 	email       string

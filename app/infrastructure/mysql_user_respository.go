@@ -33,7 +33,7 @@ func (r *MySQLUserRepository) FindBy(ctx context.Context, id int64) (*user.User,
 		users 
 	WHERE 
 		id = ?`
-	
+
 	var dbo UserDBO
 	if err := r.db.Read.QueryRowContext(ctx, query, id).Scan(
 		&dbo.Id,

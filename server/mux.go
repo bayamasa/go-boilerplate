@@ -14,12 +14,11 @@ func NewMux(db *db.DB) http.Handler {
 	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
-	
-	
+
 	userRepository := infrastructure.NewMySQLUsersRepository(db)
 	fetchUserUseCase := application.NewFetchUsersUsecase(userRepository)
 	userController := controller.NewUserController(*fetchUserUseCase)
 	mux.HandleFunc("GET /users/{id}", userController.GetUsers)
-	
+
 	return mux
 }
